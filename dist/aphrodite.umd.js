@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.aphrodite = {}));
-}(this, function (exports) { 'use strict';
+}(this, (function (exports) { 'use strict';
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -33,20 +33,35 @@
     return obj;
   }
 
-  function _objectSpread(target) {
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(source);
 
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
       }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
     }
 
     return target;
@@ -1541,32 +1556,32 @@
       "animationName": w,
       "animationPlayState": w,
       "animationTimingFunction": w,
-      "appearance": wm,
+      "appearance": wmms,
       "userSelect": wmms,
       "fontKerning": w,
-      "textEmphasisPosition": w,
-      "textEmphasis": w,
-      "textEmphasisStyle": w,
-      "textEmphasisColor": w,
-      "boxDecorationBreak": w,
+      "textEmphasisPosition": wms,
+      "textEmphasis": wms,
+      "textEmphasisStyle": wms,
+      "textEmphasisColor": wms,
+      "boxDecorationBreak": wms,
       "clipPath": w,
-      "maskImage": w,
-      "maskMode": w,
-      "maskRepeat": w,
-      "maskPosition": w,
-      "maskClip": w,
-      "maskOrigin": w,
-      "maskSize": w,
-      "maskComposite": w,
-      "mask": w,
-      "maskBorderSource": w,
-      "maskBorderMode": w,
-      "maskBorderSlice": w,
-      "maskBorderWidth": w,
-      "maskBorderOutset": w,
-      "maskBorderRepeat": w,
-      "maskBorder": w,
-      "maskType": w,
+      "maskImage": wms,
+      "maskMode": wms,
+      "maskRepeat": wms,
+      "maskPosition": wms,
+      "maskClip": wms,
+      "maskOrigin": wms,
+      "maskSize": wms,
+      "maskComposite": wms,
+      "mask": wms,
+      "maskBorderSource": wms,
+      "maskBorderMode": wms,
+      "maskBorderSlice": wms,
+      "maskBorderWidth": wms,
+      "maskBorderOutset": wms,
+      "maskBorderRepeat": wms,
+      "maskBorder": wms,
+      "maskType": wms,
       "textDecorationStyle": wm,
       "textDecorationSkip": wm,
       "textDecorationLine": wm,
@@ -2196,6 +2211,11 @@
     isBuffering = false;
     styleTag = null;
   };
+  var resetInjectedStyle = function resetInjectedStyle(key
+  /* : string */
+  ) {
+    delete alreadyInjected[key];
+  };
   var startBuffering = function startBuffering() {
     if (isBuffering) {
       throw new Error("Cannot buffer while already buffering");
@@ -2234,6 +2254,12 @@
     });
   };
 
+  var isValidStyleDefinition = function isValidStyleDefinition(def
+  /* : Object */
+  ) {
+    return "_definition" in def && "_name" in def && "_len" in def;
+  };
+
   var processStyleDefinitions = function processStyleDefinitions(styleDefinitions
   /* : any[] */
   , classNameBits
@@ -2252,10 +2278,12 @@
         if (Array.isArray(styleDefinitions[i])) {
           // We've encountered an array, so let's recurse
           length += processStyleDefinitions(styleDefinitions[i], classNameBits, definitionBits, length);
-        } else {
+        } else if (isValidStyleDefinition(styleDefinitions[i])) {
           classNameBits.push(styleDefinitions[i]._name);
           definitionBits.push(styleDefinitions[i]._definition);
           length += styleDefinitions[i]._len;
+        } else {
+          throw new Error("Invalid Style Definition: Styles should be defined using the StyleSheet.create method.");
         }
       }
     }
@@ -2328,7 +2356,7 @@
 
 
   var initialHashFn = function initialHashFn() {
-    return hashString;
+    return  hashString ;
   };
   var hashFn = initialHashFn();
   var StyleSheet = {
@@ -2394,7 +2422,7 @@
    * Not meant to be used in production.
    */
 
-  var StyleSheetTestUtils = null;
+  var StyleSheetTestUtils =  null ;
   /**
    * Generate the Aphrodite API exports, with given `selectorHandlers` and
    * `useImportant` state.
@@ -2407,7 +2435,7 @@
     /* : SelectorHandler[] */
     = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultSelectorHandlers;
     return {
-      StyleSheet: _objectSpread({}, StyleSheet, {
+      StyleSheet: _objectSpread2({}, StyleSheet, {
         /**
          * Returns a version of the exports of Aphrodite (i.e. an object
          * with `css` and `StyleSheet` properties) which have some
@@ -2455,7 +2483,9 @@
       },
       flushToStyleTag: flushToStyleTag,
       injectAndGetClassName: injectAndGetClassName,
-      defaultSelectorHandlers: defaultSelectorHandlers
+      defaultSelectorHandlers: defaultSelectorHandlers,
+      reset: reset,
+      resetInjectedStyle: resetInjectedStyle
     };
   }
 
@@ -2469,7 +2499,9 @@
       minify = Aphrodite.minify,
       flushToStyleTag$1 = Aphrodite.flushToStyleTag,
       injectAndGetClassName$1 = Aphrodite.injectAndGetClassName,
-      defaultSelectorHandlers$1 = Aphrodite.defaultSelectorHandlers;
+      defaultSelectorHandlers$1 = Aphrodite.defaultSelectorHandlers,
+      reset$1 = Aphrodite.reset,
+      resetInjectedStyle$1 = Aphrodite.resetInjectedStyle;
 
   exports.StyleSheet = StyleSheet$1;
   exports.StyleSheetServer = StyleSheetServer$1;
@@ -2479,8 +2511,10 @@
   exports.flushToStyleTag = flushToStyleTag$1;
   exports.injectAndGetClassName = injectAndGetClassName$1;
   exports.minify = minify;
+  exports.reset = reset$1;
+  exports.resetInjectedStyle = resetInjectedStyle$1;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
 //# sourceMappingURL=aphrodite.umd.js.map
