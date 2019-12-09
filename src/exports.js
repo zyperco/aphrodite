@@ -72,9 +72,7 @@ const StyleSheet = {
  *     "typeof window": JSON.stringify("object")
  *   })
  */
-const StyleSheetServer = typeof window !== 'undefined'
-    ? null
-    : {
+const StyleSheetServer = {
         renderStatic(renderFunc /* : RenderFunction */) {
             reset();
             startBuffering();
