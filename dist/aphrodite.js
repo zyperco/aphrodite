@@ -2379,7 +2379,7 @@ var StyleSheet = {
  *   })
  */
 
-var StyleSheetServer = typeof window !== 'undefined' ? null : {
+var StyleSheetServer = {
   renderStatic: function renderStatic(renderFunc
   /* : RenderFunction */
   ) {
